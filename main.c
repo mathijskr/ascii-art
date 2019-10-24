@@ -24,6 +24,16 @@ int main(int argv, char **argc)
 	pthread_t timer_thread;
 	pthread_create(&timer_thread, NULL, timer, NULL);
 
+	char canvas[tb_width() * tb_height()];
+
+	/* Initialize a canvas with only spaces. */
+	for(int i = 0; i < tb_width() * tb_height(); i++)
+		canvas[i] = ' ';
+
+	int canvasSize[2];
+	canvasSize[0] = tb_width();
+	canvasSize[1] = tb_height();
+
 	/* Quit loop if exit is true. */
 	while(!EXIT){
 		tb_clear();
@@ -31,12 +41,19 @@ int main(int argv, char **argc)
 		/* Update the simulation. */
 		if(elapsed_time % UPDATE_SPEED == 0) {
 			/* Handle input. */
-			input();
+			int *point = input();
+
+			/* Check point validity. */
+			if(point[0] != -1) {
+				canvas[point[1] * tb_width() + point[0]] = '*';
+			}
 		}
 
 		/* Draw. */
 		if(elapsed_time % DRAW_SPEED == 0) {
 			drawBackground();
+
+			drawCanvas(canvas, canvasSize);
 
 			/* Draw to screen. */
 			tb_present();
@@ -49,11 +66,28 @@ int main(int argv, char **argc)
 
 	tb_shutdown();
 
+	save(canvas, canvasSize);
+
 	return 0;
 }
 
-void input()
+int point[2];
+
+void save(char *canvas, int *canvasSize)
 {
+	for(int y = 0; y < canvasSize[1]; y++) {
+		for(int x = 0; x < canvasSize[0]; x++) {
+			printf("%c", canvas[y * canvasSize[0] + x]);
+		}
+
+		printf("\n");
+	}
+}
+
+int *input()
+{
+	point[0] = -1; point[1] = -1;
+
 	struct tb_event ev;
 
 	/* Update input with a timeout of n ms. */
@@ -61,6 +95,21 @@ void input()
 
 	if(ev.key == TB_KEY_ESC)
 		EXIT = true;
+
+	/* Mouse click. */
+	if(ev.type == TB_EVENT_MOUSE) {
+		point[0] = ev.x;
+		point[1] = ev.y;
+	}
+
+	return point;
+}
+
+void drawCanvas(char *canvas, int *canvasSize)
+{
+	for(int y = 0; y < canvasSize[1]; y++)
+		for(int x = 0; x < canvasSize[0]; x++)
+			tb_change_cell(x, y, canvas[y * canvasSize[0] + x], TB_GREEN, BACKGROUND_COLOR);
 }
 
 void drawBackground()

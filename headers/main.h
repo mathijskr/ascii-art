@@ -14,7 +14,11 @@
 
 #define BACKGROUND_COLOR TB_DEFAULT
 
-void input();
+void save(char *canvas, int *canvasSize);
+
+int *input();
+
+void drawCanvas(char *canvas, int *canvasSize);
 
 /* Draw a space character with a color that is specified by BACKGROUND_COLOR
  * at all possible screen coordinates. */
