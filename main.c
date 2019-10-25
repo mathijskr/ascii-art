@@ -33,7 +33,7 @@ int main(int argv, char **argc)
 
 	Pixel hotbar[HOTBAR_SIZE[0] * HOTBAR_SIZE[1]];
 
-	/* Initialize a hotbar with only space. **/
+	/* Initialize a hotbar with only spaces. */
 	for(int i = 0; i < HOTBAR_SIZE[0] * HOTBAR_SIZE[1]; i++) {
 		hotbar[i].symbol = ' ';
 		hotbar[i].color = TB_GREEN;
