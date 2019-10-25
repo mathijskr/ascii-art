@@ -14,11 +14,13 @@
 
 #define BACKGROUND_COLOR TB_DEFAULT
 
-void save(char *canvas, int *canvasSize);
+#define HOTBAR_HEIGHT 4
+
+void save(char *canvas, int *CANVAS_SIZE);
 
 int *input();
 
-void drawCanvas(char *canvas, int *canvasSize);
+void paint(char *canvas, int *CANVAS_SIZE);
 
 /* Draw a space character with a color that is specified by BACKGROUND_COLOR
  * at all possible screen coordinates. */
@@ -26,5 +28,7 @@ void drawBackground();
 
 /* Increase the elapsed_time variable every mili second. */
 void *timer();
+
+char POSSIBLE_SYMBOLS[10] = { '!', '@', '#', '$', '%', '^', '&', '*', '(', ')' };
 
 #endif

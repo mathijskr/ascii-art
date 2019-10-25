@@ -24,15 +24,36 @@ int main(int argv, char **argc)
 	pthread_t timer_thread;
 	pthread_create(&timer_thread, NULL, timer, NULL);
 
-	char canvas[tb_width() * tb_height()];
+	int HOTBAR_SIZE[2];
+	HOTBAR_SIZE[0] = tb_width();
+	HOTBAR_SIZE[1] = HOTBAR_HEIGHT;
+
+	char hotbar[HOTBAR_SIZE[0] * HOTBAR_SIZE[1]];
+
+	/* Initialize a hotbar with only space. **/
+	for(int i = 0; i < HOTBAR_SIZE[0] * HOTBAR_SIZE[1]; i++)
+		hotbar[i] = ' ';
+
+	/* Initialize a border between canvas and hotbar. */
+	for(int y = HOTBAR_SIZE[1] - 1, x = 0; x < HOTBAR_SIZE[0]; x++)
+		hotbar[y * HOTBAR_SIZE[0] + x] = '-';
+
+	/* Show possible drawing symbols in the hotbar. */
+	for(int y = 2, x = 2, i = 0; x < HOTBAR_SIZE[0] - 6 && i < 10; x +=6) {
+		hotbar[y * HOTBAR_SIZE[0] + x] = '0' + i++;
+		hotbar[y * HOTBAR_SIZE[0] + x + 1] = ':';
+		hotbar[y * HOTBAR_SIZE[0] + x + 3] = POSSIBLE_SYMBOLS[i];
+	}
+
+	int CANVAS_SIZE[2];
+	CANVAS_SIZE[0] = tb_width();
+	CANVAS_SIZE[1] = tb_height() - HOTBAR_SIZE[1];
+
+	char canvas[CANVAS_SIZE[0] * CANVAS_SIZE[1]];
 
 	/* Initialize a canvas with only spaces. */
-	for(int i = 0; i < tb_width() * tb_height(); i++)
+	for(int i = 0; i < CANVAS_SIZE[0] * CANVAS_SIZE[1]; i++)
 		canvas[i] = ' ';
-
-	int canvasSize[2];
-	canvasSize[0] = tb_width();
-	canvasSize[1] = tb_height();
 
 	/* Quit loop if exit is true. */
 	while(!EXIT){
@@ -41,11 +62,11 @@ int main(int argv, char **argc)
 		/* Update the simulation. */
 		if(elapsed_time % UPDATE_SPEED == 0) {
 			/* Handle input. */
-			int *point = input();
+			int *point = input(CANVAS_SIZE);
 
 			/* Check point validity. */
 			if(point[0] != -1) {
-				canvas[point[1] * tb_width() + point[0]] = '*';
+				canvas[point[1] * CANVAS_SIZE[0] + point[0]] = '*';
 			}
 		}
 
@@ -53,7 +74,8 @@ int main(int argv, char **argc)
 		if(elapsed_time % DRAW_SPEED == 0) {
 			drawBackground();
 
-			drawCanvas(canvas, canvasSize);
+			paint(canvas, CANVAS_SIZE);
+			paint(hotbar, HOTBAR_SIZE);
 
 			/* Draw to screen. */
 			tb_present();
@@ -66,16 +88,16 @@ int main(int argv, char **argc)
 
 	tb_shutdown();
 
-	save(canvas, canvasSize);
+	save(canvas, CANVAS_SIZE);
 
 	return 0;
 }
 
-void save(char *canvas, int *canvasSize)
+void save(char *canvas, int *CANVAS_SIZE)
 {
-	for(int y = 0; y < canvasSize[1]; y++) {
-		for(int x = 0; x < canvasSize[0]; x++) {
-			printf("%c", canvas[y * canvasSize[0] + x]);
+	for(int y = 0; y < CANVAS_SIZE[1]; y++) {
+		for(int x = 0; x < CANVAS_SIZE[0]; x++) {
+			printf("%c", canvas[y * CANVAS_SIZE[0] + x]);
 		}
 
 		printf("\n");
@@ -83,7 +105,7 @@ void save(char *canvas, int *canvasSize)
 }
 
 int point[2];
-int *input()
+int *input(int *CANVAS_SIZE)
 {
 	point[0] = -1; point[1] = -1;
 
@@ -98,19 +120,21 @@ int *input()
 	/* Mouse click. */
 	if(ev.type == TB_EVENT_MOUSE) {
 		if(ev.key == TB_KEY_MOUSE_LEFT) {
-			point[0] = ev.x;
-			point[1] = ev.y;
+			if(ev.x <= CANVAS_SIZE[0] && ev.y >= tb_height() - CANVAS_SIZE[1]) {
+				point[0] = ev.x;
+				point[1] = ev.y;
+			}
 		}
 	}
 
 	return point;
 }
 
-void drawCanvas(char *canvas, int *canvasSize)
+void paint(char *canvas, int *CANVAS_SIZE)
 {
-	for(int y = 0; y < canvasSize[1]; y++)
-		for(int x = 0; x < canvasSize[0]; x++)
-			tb_change_cell(x, y, canvas[y * canvasSize[0] + x], TB_GREEN, BACKGROUND_COLOR);
+	for(int y = 0; y < CANVAS_SIZE[1]; y++)
+		for(int x = 0; x < CANVAS_SIZE[0]; x++)
+			tb_change_cell(x, y, canvas[y * CANVAS_SIZE[0] + x], TB_GREEN, BACKGROUND_COLOR);
 }
 
 void drawBackground()
