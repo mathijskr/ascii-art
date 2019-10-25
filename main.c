@@ -71,8 +71,6 @@ int main(int argv, char **argc)
 	return 0;
 }
 
-int point[2];
-
 void save(char *canvas, int *canvasSize)
 {
 	for(int y = 0; y < canvasSize[1]; y++) {
@@ -84,6 +82,7 @@ void save(char *canvas, int *canvasSize)
 	}
 }
 
+int point[2];
 int *input()
 {
 	point[0] = -1; point[1] = -1;
@@ -98,8 +97,10 @@ int *input()
 
 	/* Mouse click. */
 	if(ev.type == TB_EVENT_MOUSE) {
-		point[0] = ev.x;
-		point[1] = ev.y;
+		if(ev.key == TB_KEY_MOUSE_LEFT) {
+			point[0] = ev.x;
+			point[1] = ev.y;
+		}
 	}
 
 	return point;
