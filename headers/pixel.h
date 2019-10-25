@@ -6,6 +6,7 @@ typedef struct Pixel Pixel;
 struct Pixel{
 	char symbol;
 	int color;
+	int backColor;
 };
 
 #endif

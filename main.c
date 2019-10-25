@@ -8,6 +8,7 @@ int elapsed_time = 0;
 
 int ACTIVE_SYMBOL = 0;
 int ACTIVE_COLOR = TB_WHITE;
+int ACTIVE_BACK_COLOR = BACKGROUND_COLOR;
 
 
 int main(int argv, char **argc)
@@ -37,22 +38,41 @@ int main(int argv, char **argc)
 	for(int i = 0; i < HOTBAR_SIZE[0] * HOTBAR_SIZE[1]; i++) {
 		hotbar[i].symbol = ' ';
 		hotbar[i].color = TB_GREEN;
+		hotbar[i].backColor = BACKGROUND_COLOR;
 	}
 
 	/* Initialize a border between canvas and hotbar. */
 	for(int y = HOTBAR_SIZE[1] - 1, x = 0; x < HOTBAR_SIZE[0]; x++) {
 		hotbar[y * HOTBAR_SIZE[0] + x].symbol = '-';
 		hotbar[y * HOTBAR_SIZE[0] + x].color = TB_GREEN;
+		hotbar[y * HOTBAR_SIZE[0] + x].backColor = BACKGROUND_COLOR;
 	}
 
+	int x = 2;
 	/* Show possible drawing symbols in the hotbar. */
-	for(int y = 2, x = 2, i = 0; x < HOTBAR_SIZE[0] - 6 && i < 10; x +=6) {
-		hotbar[y * HOTBAR_SIZE[0] + x].symbol = '0' + i++;
+	for(int y = 2, i = 0; x < HOTBAR_SIZE[0] - 6 && i < 10; x += 6, i++) {
+		hotbar[y * HOTBAR_SIZE[0] + x].symbol = '0' + i;
 		hotbar[y * HOTBAR_SIZE[0] + x].color = TB_GREEN;
+		hotbar[y * HOTBAR_SIZE[0] + x].backColor = BACKGROUND_COLOR;
 		hotbar[y * HOTBAR_SIZE[0] + x + 1].symbol = ':';
 		hotbar[y * HOTBAR_SIZE[0] + x + 1].color = TB_GREEN;
+		hotbar[y * HOTBAR_SIZE[0] + x + 1].backColor = TB_BLACK;
 		hotbar[y * HOTBAR_SIZE[0] + x + 3].symbol = POSSIBLE_SYMBOLS[i];
 		hotbar[y * HOTBAR_SIZE[0] + x + 3].color = TB_GREEN;
+		hotbar[y * HOTBAR_SIZE[0] + x + 3].backColor = BACKGROUND_COLOR;
+	}
+	x += 4;
+	/* Show possible colors in the hotbar. */
+	for(int y = 2, i = 0; x < HOTBAR_SIZE[0] - 6 && i <= TB_WHITE - TB_BLACK; x += 6, i++) {
+		hotbar[y * HOTBAR_SIZE[0] + x].symbol = 'a' + i;
+		hotbar[y * HOTBAR_SIZE[0] + x].color = TB_GREEN;
+		hotbar[y * HOTBAR_SIZE[0] + x].backColor = BACKGROUND_COLOR;
+		hotbar[y * HOTBAR_SIZE[0] + x + 1].symbol = ':';
+		hotbar[y * HOTBAR_SIZE[0] + x + 1].color = TB_GREEN;
+		hotbar[y * HOTBAR_SIZE[0] + x + 1].backColor = BACKGROUND_COLOR;
+		hotbar[y * HOTBAR_SIZE[0] + x + 3].symbol = ' ';
+		hotbar[y * HOTBAR_SIZE[0] + x + 3].color = TB_BLACK + i;
+		hotbar[y * HOTBAR_SIZE[0] + x + 3].backColor = TB_BLACK + i;
 	}
 
 	int CANVAS_SIZE[2];
@@ -65,6 +85,7 @@ int main(int argv, char **argc)
 	for(int i = 0; i < CANVAS_SIZE[0] * CANVAS_SIZE[1]; i++) {
 		canvas[i].symbol = ' ';
 		canvas[i].color = TB_GREEN;
+		canvas[i].backColor = BACKGROUND_COLOR;
 	}
 
 	/* Quit loop if exit is true. */
@@ -80,6 +101,7 @@ int main(int argv, char **argc)
 			if(point[0] != -1) {
 				canvas[point[1] * CANVAS_SIZE[0] + point[0]].symbol = POSSIBLE_SYMBOLS[ACTIVE_SYMBOL];
 				canvas[point[1] * CANVAS_SIZE[0] + point[0]].color = ACTIVE_COLOR;
+				canvas[point[1] * CANVAS_SIZE[0] + point[0]].backColor = ACTIVE_BACK_COLOR;
 			}
 		}
 
@@ -159,7 +181,7 @@ void paint(Pixel *canvas, int *CANVAS_SIZE)
 {
 	for(int y = 0; y < CANVAS_SIZE[1]; y++)
 		for(int x = 0; x < CANVAS_SIZE[0]; x++)
-			tb_change_cell(x, y, canvas[y * CANVAS_SIZE[0] + x].symbol, canvas[y * CANVAS_SIZE[0] + x].color, BACKGROUND_COLOR);
+			tb_change_cell(x, y, canvas[y * CANVAS_SIZE[0] + x].symbol, canvas[y * CANVAS_SIZE[0] + x].color, canvas[y * CANVAS_SIZE[0] + x].backColor);
 }
 
 void drawBackground()
