@@ -49,7 +49,7 @@ int main(int argv, char **argc)
 
 	int CANVAS_SIZE[2];
 	CANVAS_SIZE[0] = tb_width();
-	CANVAS_SIZE[1] = tb_height() - HOTBAR_SIZE[1];
+	CANVAS_SIZE[1] = tb_height();
 
 	char canvas[CANVAS_SIZE[0] * CANVAS_SIZE[1]];
 
