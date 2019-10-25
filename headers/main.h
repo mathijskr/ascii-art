@@ -9,6 +9,8 @@
 
 #include "termbox.h"
 
+#include "pixel.h"
+
 #define UPDATE_SPEED 20 /* Must be at least 10 */
 #define DRAW_SPEED 16 /* 16 := 60 ~fps */
 
@@ -18,11 +20,11 @@
 
 #define POSSIBLE_SYMBOLS_SIZE 10
 
-void save(char *canvas, int *CANVAS_SIZE);
+void save(Pixel *canvas, int *CANVAS_SIZE);
 
 int *input();
 
-void paint(char *canvas, int *CANVAS_SIZE);
+void paint(Pixel *canvas, int *CANVAS_SIZE);
 
 /* Draw a space character with a color that is specified by BACKGROUND_COLOR
  * at all possible screen coordinates. */

@@ -30,32 +30,41 @@ int main(int argv, char **argc)
 	HOTBAR_SIZE[0] = tb_width();
 	HOTBAR_SIZE[1] = HOTBAR_HEIGHT;
 
-	char hotbar[HOTBAR_SIZE[0] * HOTBAR_SIZE[1]];
+	Pixel hotbar[HOTBAR_SIZE[0] * HOTBAR_SIZE[1]];
 
 	/* Initialize a hotbar with only space. **/
-	for(int i = 0; i < HOTBAR_SIZE[0] * HOTBAR_SIZE[1]; i++)
-		hotbar[i] = ' ';
+	for(int i = 0; i < HOTBAR_SIZE[0] * HOTBAR_SIZE[1]; i++) {
+		hotbar[i].symbol = ' ';
+		hotbar[i].color = TB_GREEN;
+	}
 
 	/* Initialize a border between canvas and hotbar. */
-	for(int y = HOTBAR_SIZE[1] - 1, x = 0; x < HOTBAR_SIZE[0]; x++)
-		hotbar[y * HOTBAR_SIZE[0] + x] = '-';
+	for(int y = HOTBAR_SIZE[1] - 1, x = 0; x < HOTBAR_SIZE[0]; x++) {
+		hotbar[y * HOTBAR_SIZE[0] + x].symbol = '-';
+		hotbar[y * HOTBAR_SIZE[0] + x].color = TB_GREEN;
+	}
 
 	/* Show possible drawing symbols in the hotbar. */
 	for(int y = 2, x = 2, i = 0; x < HOTBAR_SIZE[0] - 6 && i < 10; x +=6) {
-		hotbar[y * HOTBAR_SIZE[0] + x] = '0' + i++;
-		hotbar[y * HOTBAR_SIZE[0] + x + 1] = ':';
-		hotbar[y * HOTBAR_SIZE[0] + x + 3] = POSSIBLE_SYMBOLS[i];
+		hotbar[y * HOTBAR_SIZE[0] + x].symbol = '0' + i++;
+		hotbar[y * HOTBAR_SIZE[0] + x].color = TB_GREEN;
+		hotbar[y * HOTBAR_SIZE[0] + x + 1].symbol = ':';
+		hotbar[y * HOTBAR_SIZE[0] + x + 1].color = TB_GREEN;
+		hotbar[y * HOTBAR_SIZE[0] + x + 3].symbol = POSSIBLE_SYMBOLS[i];
+		hotbar[y * HOTBAR_SIZE[0] + x + 3].color = TB_GREEN;
 	}
 
 	int CANVAS_SIZE[2];
 	CANVAS_SIZE[0] = tb_width();
 	CANVAS_SIZE[1] = tb_height();
 
-	char canvas[CANVAS_SIZE[0] * CANVAS_SIZE[1]];
+	Pixel canvas[CANVAS_SIZE[0] * CANVAS_SIZE[1]];
 
 	/* Initialize a canvas with only spaces. */
-	for(int i = 0; i < CANVAS_SIZE[0] * CANVAS_SIZE[1]; i++)
-		canvas[i] = ' ';
+	for(int i = 0; i < CANVAS_SIZE[0] * CANVAS_SIZE[1]; i++) {
+		canvas[i].symbol = ' ';
+		canvas[i].color = TB_GREEN;
+	}
 
 	/* Quit loop if exit is true. */
 	while(!EXIT){
@@ -68,7 +77,8 @@ int main(int argv, char **argc)
 
 			/* Check point validity. */
 			if(point[0] != -1) {
-				canvas[point[1] * CANVAS_SIZE[0] + point[0]] = POSSIBLE_SYMBOLS[ACTIVE_SYMBOL];
+				canvas[point[1] * CANVAS_SIZE[0] + point[0]].symbol = POSSIBLE_SYMBOLS[ACTIVE_SYMBOL];
+				canvas[point[1] * CANVAS_SIZE[0] + point[0]].color = TB_GREEN;
 			}
 		}
 
@@ -95,11 +105,11 @@ int main(int argv, char **argc)
 	return 0;
 }
 
-void save(char *canvas, int *CANVAS_SIZE)
+void save(Pixel *canvas, int *CANVAS_SIZE)
 {
 	for(int y = 0; y < CANVAS_SIZE[1]; y++) {
 		for(int x = 0; x < CANVAS_SIZE[0]; x++) {
-			printf("%c", canvas[y * CANVAS_SIZE[0] + x]);
+			printf("%c", canvas[y * CANVAS_SIZE[0] + x].symbol);
 		}
 
 		printf("\n");
@@ -140,11 +150,11 @@ int *input(int *CANVAS_SIZE)
 	return point;
 }
 
-void paint(char *canvas, int *CANVAS_SIZE)
+void paint(Pixel *canvas, int *CANVAS_SIZE)
 {
 	for(int y = 0; y < CANVAS_SIZE[1]; y++)
 		for(int x = 0; x < CANVAS_SIZE[0]; x++)
-			tb_change_cell(x, y, canvas[y * CANVAS_SIZE[0] + x], TB_GREEN, BACKGROUND_COLOR);
+			tb_change_cell(x, y, canvas[y * CANVAS_SIZE[0] + x].symbol, canvas[y * CANVAS_SIZE[0] + x].color, BACKGROUND_COLOR);
 }
 
 void drawBackground()
