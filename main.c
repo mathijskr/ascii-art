@@ -1,10 +1,6 @@
 #include "main.h"
 
-int GROUND;
-int WALL;
 bool EXIT = false;
-
-int elapsed_time = 0;
 
 int ACTIVE_SYMBOL = 0;
 int ACTIVE_COLOR = TB_WHITE;
@@ -24,9 +20,6 @@ int main(int argv, char **argc)
 	tb_select_input_mode(TB_INPUT_ESC | TB_INPUT_MOUSE);
 	tb_select_output_mode(TB_OUTPUT_NORMAL);
 	tb_clear();
-
-	pthread_t timer_thread;
-	pthread_create(&timer_thread, NULL, timer, NULL);
 
 	int HOTBAR_SIZE[2];
 	HOTBAR_SIZE[0] = tb_width();
@@ -92,33 +85,24 @@ int main(int argv, char **argc)
 	while(!EXIT){
 		tb_clear();
 
-		/* Update the simulation. */
-		if(elapsed_time % UPDATE_SPEED == 0) {
-			/* Handle input. */
-			int *point = input(CANVAS_SIZE);
+		/* Handle input. */
+		int *point = input(CANVAS_SIZE);
 
-			/* Check point validity. */
-			if(point[0] != -1) {
-				canvas[point[1] * CANVAS_SIZE[0] + point[0]].symbol = POSSIBLE_SYMBOLS[ACTIVE_SYMBOL];
-				canvas[point[1] * CANVAS_SIZE[0] + point[0]].color = ACTIVE_COLOR;
-				canvas[point[1] * CANVAS_SIZE[0] + point[0]].backColor = ACTIVE_BACK_COLOR;
-			}
+		/* Check point validity. */
+		if(point[0] != -1) {
+			canvas[point[1] * CANVAS_SIZE[0] + point[0]].symbol = POSSIBLE_SYMBOLS[ACTIVE_SYMBOL];
+			canvas[point[1] * CANVAS_SIZE[0] + point[0]].color = ACTIVE_COLOR;
+			canvas[point[1] * CANVAS_SIZE[0] + point[0]].backColor = ACTIVE_BACK_COLOR;
 		}
 
 		/* Draw. */
-		if(elapsed_time % DRAW_SPEED == 0) {
-			drawBackground();
+		drawBackground();
 
-			paint(canvas, CANVAS_SIZE);
-			paint(hotbar, HOTBAR_SIZE);
+		paint(canvas, CANVAS_SIZE);
+		paint(hotbar, HOTBAR_SIZE);
 
-			/* Draw to screen. */
-			tb_present();
-		}
-
-		/* Increase time to ensure that timed loops won't
-		 * be called twice. */
-		elapsed_time++;
+		/* Draw to screen. */
+		tb_present();
 	}
 
 	tb_shutdown();
@@ -193,22 +177,4 @@ void drawBackground()
 			BACKGROUND_COLOR);
 		}
 	}
-}
-
-void *timer()
-{
-	/* Needed for nanosleep. */
-	struct timespec tim, tim2;
-	tim.tv_sec = 0;
-	tim.tv_nsec = 1000000;
-
-	while(!EXIT){
-		nanosleep(&tim, &tim2);
-		elapsed_time++;
-
-		if(elapsed_time == 160)
-			elapsed_time = 0;
-	}
-
-	return &EXIT;
 }
