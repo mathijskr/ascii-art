@@ -7,6 +7,7 @@ bool EXIT = false;
 int elapsed_time = 0;
 
 int ACTIVE_SYMBOL = 0;
+int ACTIVE_COLOR = TB_WHITE;
 
 
 int main(int argv, char **argc)
@@ -78,7 +79,7 @@ int main(int argv, char **argc)
 			/* Check point validity. */
 			if(point[0] != -1) {
 				canvas[point[1] * CANVAS_SIZE[0] + point[0]].symbol = POSSIBLE_SYMBOLS[ACTIVE_SYMBOL];
-				canvas[point[1] * CANVAS_SIZE[0] + point[0]].color = TB_GREEN;
+				canvas[point[1] * CANVAS_SIZE[0] + point[0]].color = ACTIVE_COLOR;
 			}
 		}
 
@@ -143,6 +144,10 @@ int *input(int *CANVAS_SIZE)
 			char new_symbol = ev.ch;
 			if(new_symbol >= '0' && new_symbol < '0' + POSSIBLE_SYMBOLS_SIZE) {
 				ACTIVE_SYMBOL = new_symbol - '0';
+			}
+
+			if(new_symbol >= 'a' && new_symbol < 'a' + TB_WHITE) {
+				ACTIVE_COLOR = TB_BLACK + new_symbol - 'a';
 			}
 		}
 	}
