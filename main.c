@@ -17,6 +17,11 @@ int main(int argv, char **argc)
 		return -1;
 	}
 
+	/* Needed for nanosleep. */
+	struct timespec tim, tim2;
+	tim.tv_sec = 0;
+	tim.tv_nsec = 16 * 100000L; /* 16 mili seconds ~= 60FPS */
+
 	tb_select_input_mode(TB_INPUT_ESC | TB_INPUT_MOUSE);
 	tb_select_output_mode(TB_OUTPUT_NORMAL);
 	tb_clear();
@@ -103,6 +108,9 @@ int main(int argv, char **argc)
 
 		/* Draw to screen. */
 		tb_present();
+
+		/* Sleep. */
+		nanosleep(&tim, &tim2);
 	}
 
 	tb_shutdown();

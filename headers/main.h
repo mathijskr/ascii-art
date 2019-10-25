@@ -1,8 +1,9 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#include <stdio.h>
 #include <stdbool.h>
+#include <stdio.h>
+#include <time.h>
 
 #include "termbox.h"
 
