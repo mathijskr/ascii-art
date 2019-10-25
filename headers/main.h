@@ -16,6 +16,8 @@
 
 #define HOTBAR_HEIGHT 4
 
+#define POSSIBLE_SYMBOLS_SIZE 10
+
 void save(char *canvas, int *CANVAS_SIZE);
 
 int *input();
@@ -29,6 +31,6 @@ void drawBackground();
 /* Increase the elapsed_time variable every mili second. */
 void *timer();
 
-char POSSIBLE_SYMBOLS[10] = { '!', '@', '#', '$', '%', '^', '&', '*', '(', ')' };
+char POSSIBLE_SYMBOLS[POSSIBLE_SYMBOLS_SIZE] = { ')', '!', '@', '#', '$', '%', '^', '&', '*', '(' };
 
 #endif

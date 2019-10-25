@@ -6,6 +6,8 @@ bool EXIT = false;
 
 int elapsed_time = 0;
 
+int ACTIVE_SYMBOL = 0;
+
 
 int main(int argv, char **argc)
 {
@@ -66,7 +68,7 @@ int main(int argv, char **argc)
 
 			/* Check point validity. */
 			if(point[0] != -1) {
-				canvas[point[1] * CANVAS_SIZE[0] + point[0]] = '*';
+				canvas[point[1] * CANVAS_SIZE[0] + point[0]] = POSSIBLE_SYMBOLS[ACTIVE_SYMBOL];
 			}
 		}
 
@@ -114,15 +116,23 @@ int *input(int *CANVAS_SIZE)
 	/* Update input with a timeout of n ms. */
 	tb_peek_event(&ev, 0);
 
-	if(ev.key == TB_KEY_ESC)
-		EXIT = true;
-
 	/* Mouse click. */
 	if(ev.type == TB_EVENT_MOUSE) {
 		if(ev.key == TB_KEY_MOUSE_LEFT) {
 			if(ev.x <= CANVAS_SIZE[0] && ev.y >= tb_height() - CANVAS_SIZE[1]) {
 				point[0] = ev.x;
 				point[1] = ev.y;
+			}
+		}
+	}
+
+	if(ev.type == TB_EVENT_KEY) {
+		if(ev.key == TB_KEY_ESC) {
+			EXIT = true;
+		} else {
+			char new_symbol = ev.ch;
+			if(new_symbol >= '0' && new_symbol < '0' + POSSIBLE_SYMBOLS_SIZE) {
+				ACTIVE_SYMBOL = new_symbol - '0';
 			}
 		}
 	}
