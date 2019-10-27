@@ -1,6 +1,6 @@
 CC=gcc
 FLAGS=-Wall -g 
-LIBS=-lpthread -ltermbox
+LIBS=-ltermbox
 OUT=art
 INCLUDE=-I headers/
 OBJS=./out/pixel.o
