@@ -60,6 +60,19 @@ int main(int argv, char **argc)
 		hotbar[y * HOTBAR_SIZE[0] + x + 3].backColor = BACKGROUND_COLOR;
 	}
 	x += 4;
+
+	hotbar[2 * HOTBAR_SIZE[0] + x].symbol = 'E';
+	hotbar[2 * HOTBAR_SIZE[0] + x].color = TB_GREEN;
+	hotbar[2 * HOTBAR_SIZE[0] + x].backColor = BACKGROUND_COLOR;
+	hotbar[2 * HOTBAR_SIZE[0] + x + 1].symbol = ':';
+	hotbar[2 * HOTBAR_SIZE[0] + x + 1].color = TB_GREEN;
+	hotbar[2 * HOTBAR_SIZE[0] + x + 1].backColor = BACKGROUND_COLOR;
+	hotbar[2 * HOTBAR_SIZE[0] + x + 3].symbol = '-';
+	hotbar[2 * HOTBAR_SIZE[0] + x + 3].color = TB_GREEN;
+	hotbar[2 * HOTBAR_SIZE[0] + x + 3].backColor = BACKGROUND_COLOR;
+
+	x += 7;
+
 	/* Show possible colors in the hotbar. */
 	for(int y = 2, i = 0; x < HOTBAR_SIZE[0] - 6 && i <= TB_WHITE - TB_BLACK; x += 6, i++) {
 		hotbar[y * HOTBAR_SIZE[0] + x].symbol = 'a' + i;
@@ -162,6 +175,10 @@ int *input(int *CANVAS_SIZE)
 
 			if(new_symbol >= 'a' && new_symbol < 'a' + TB_WHITE) {
 				ACTIVE_COLOR = TB_BLACK + new_symbol - 'a';
+			}
+
+			if(new_symbol == '-') {
+				ACTIVE_SYMBOL = ' ';
 			}
 		}
 	}
