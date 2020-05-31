@@ -1,6 +1,8 @@
 # ascii-art
 A drawing program for in your terminal. Draw ascii art that you can copy directly from the terminal.
 
+![](hello.png)
+
 ## How to install:
 1. Install termbox development files: 
 * Void Linux: xbps-install termbox-devel
